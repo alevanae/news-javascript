@@ -19,7 +19,7 @@ function parseUser(userData) {
   return user;
 }
 function toLoginPage() {
-  window.location.href = "../pages/login.html"; //"../pages/login.html"
+  window.location.href = "./pages/login.html"; //"../pages/login.html"
 }
 
 /**** ACTIONS ****/

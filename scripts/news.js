@@ -1,21 +1,20 @@
-'use strict'
+"use strict";
 
-const news = document.getElementById('news-container');
-const btnPrev = document.getElementById('btn-prev');
-const btnNext = document.getElementById('btn-next');
-const pageNum = document.getElementById('page-num');
-const navPage = document.getElementById('nav-page-num');
-
+const news = document.getElementById("news-container");
+const btnPrev = document.getElementById("btn-prev");
+const btnNext = document.getElementById("btn-next");
+const pageNum = document.getElementById("page-num");
+const navPage = document.getElementById("nav-page-num");
 
 /**** DATA ****/
-const setting = JSON.parse(getFromStorage(KEY_SET, '[]'));
-const curUser = JSON.parse(getFromStorage(KEY_CUR, '0'));
-let [userNews] = setting.filter(user => user.username === curUser.username);
-if(!userNews) {
+const setting = JSON.parse(getFromStorage(KEY_SET, "[]"));
+const curUser = JSON.parse(getFromStorage(KEY_CUR, "0"));
+let [userNews] = setting.filter((user) => user.username === curUser.username);
+if (!userNews) {
   userNews = {
     pageSize: 10,
-    category: 'General'
-  }
+    category: "General",
+  };
 }
 let url = `https://newsapi.org/v2/top-headlines?country=us&category=${userNews.category}&pageSize=${userNews.pageSize}&page=1&apiKey=${API_KEY}`;
 let totalResults = 0;
@@ -23,23 +22,22 @@ let totalResults = 0;
 /**** FUNCTIONS ****/
 function changePage(nextOrPrev, pageSize, category) {
   const curPage = Number(pageNum.textContent);
-  let futurePage = nextOrPrev === 'Next' ? curPage+1 : curPage-1;
+  let futurePage = nextOrPrev === "Next" ? curPage + 1 : curPage - 1;
   pageNum.textContent = futurePage;
-  if(futurePage === 1){
-    btnPrev.classList.add('hide');  
+  if (futurePage === 1) {
+    btnPrev.classList.add("hide");
   } else if (futurePage * pageSize > totalResults) {
-    btnNext.classList.add('hide');
-  }
-  else {
-    btnNext.classList.remove('hide');
-    btnPrev.classList.remove('hide');
+    btnNext.classList.add("hide");
+  } else {
+    btnNext.classList.remove("hide");
+    btnPrev.classList.remove("hide");
   }
   url = `https://newsapi.org/v2/top-headlines?country=us&category=${category}&pageSize=${pageSize}&page=${futurePage}&apiKey=${API_KEY}`;
-    news.innerHTML = '';
-    displayNews(url);
+  news.innerHTML = "";
+  displayNews(url);
 }
 function addNews(article) {
-  const newsChild = document.createElement('div');
+  const newsChild = document.createElement("div");
   newsChild.innerHTML = `<div class="card mb-3" style="max-width: 100%;">
   <div class="row g-0">
     <div class="col-md-4">
@@ -61,23 +59,22 @@ function addNews(article) {
 async function displayNews(url) {
   try {
     const newsArr = await getNews(url);
-    console.log(newsArr);
     totalResults = newsArr.totalResults;
-    if(totalResults < userNews.pageSize) navPage.classList.add('hide');
-    for(const article of newsArr.articles){
+    if (totalResults < userNews.pageSize) navPage.classList.add("hide");
+    for (const article of newsArr.articles) {
       addNews(article);
     }
-  } catch(err){
+  } catch (err) {
     console.error(err);
   }
 }
 
 /**** ACTIONS ****/
 displayNews(url);
-btnPrev.classList.add('hide');
-btnNext.addEventListener('click', function() {
-  changePage('Next', userNews.pageSize, userNews.category);
-})
-btnPrev.addEventListener('click', function() {
-  changePage('Prev', userNews.pageSize, userNews.category);
-})
+btnPrev.classList.add("hide");
+btnNext.addEventListener("click", function () {
+  changePage("Next", userNews.pageSize, userNews.category);
+});
+btnPrev.addEventListener("click", function () {
+  changePage("Prev", userNews.pageSize, userNews.category);
+});

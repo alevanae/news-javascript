@@ -63,7 +63,6 @@ regBtn.addEventListener("click", function (e) {
     password: password.value,
   };
   const confirm = passwordConfirm.value;
-  console.log(getUser(data));
   if (validateData(data, confirm)) {
     const user = getUser(data);
     addUser(user);
